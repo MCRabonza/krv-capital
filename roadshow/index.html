@@ -48,6 +48,16 @@ h2{font-family:var(--display);font-style:italic;font-weight:300;font-size:20px;l
 .ask .m{font-size:10px;color:var(--muted);margin-top:4px;line-height:1.35}
 /* problem */
 .st3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:7px}
+.st5{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:7px}
+.st5 .card{padding:6px 8px 5px}
+.st5 .card .n{font-size:19px;white-space:normal}
+.st5 .card .n small{font-size:11px;white-space:nowrap}
+.st5 .card .t{font-size:8.6px;line-height:1.3}
+.pb{display:flex;justify-content:space-between;align-items:baseline;gap:14px;margin-top:6px}
+.pb .pl{font-size:11px;color:var(--forest)}
+.pb .pl i{font-family:var(--display);font-style:italic;font-weight:300;font-size:13px}
+.pb .pl b{color:var(--copper)}
+.pb .ps{font-size:6.5px;color:var(--forest);opacity:.6;text-align:right;max-width:52%}
 .card{background:rgba(255,255,255,.5);border:1px solid var(--line);padding:6px 10px}
 .card .n{font-family:var(--display);font-style:italic;font-weight:300;font-size:22px;line-height:1.05;color:var(--forest);white-space:nowrap}
 .card .n small{font-size:14px}
@@ -121,12 +131,15 @@ h2{font-family:var(--display);font-style:italic;font-weight:300;font-size:20px;l
 
 <section class="sec">
   <div class="eb"><b>01</b>The Problem</div>
-  <h2>Banks Lend to What They Can Read. Most SMEs Can&rsquo;t Be Read.</h2>
-  <div class="st3">
-    <div class="card"><div class="n">8.81% <small>vs 1.40%</small></div><div class="t">Thai bank SME loans non-performing, against large companies (Bank of Thailand, Q2 2026).</div></div>
-    <div class="card"><div class="n">THB 5M <small>to</small> 500M</div><div class="t">Banks stop at THB 5M unsecured; credit funds start at THB 500M a loan. The small giants sit in between.</div></div>
+  <h2>Capital Flows to Clear Books. Most SMEs Don&rsquo;t Have Any.</h2>
+  <div class="st5">
+    <div class="card"><div class="n">7 in 10</div><div class="t">Thai SMEs have no duty to file audited accounts. A lender has nothing to read.</div></div>
     <div class="card"><div class="n">Shoebox</div><div class="t">Receipts in a box, statements in a drawer. Software stops at the books; advisers start at THB 1.75B of revenue.</div></div>
+    <div class="card"><div class="n">1 in 8</div><div class="t">young Thai SMEs has a bank loan. Over a third of SMEs in debt borrow from family or moneylenders.</div></div>
+    <div class="card"><div class="n">1 in 3</div><div class="t">Thai SMEs without credit close within five years. With credit, almost 9 in 10 survive.</div></div>
+    <div class="card"><div class="n">THB 3.6T</div><div class="t">(USD 103B) of SME credit is missing in Thailand alone: almost half of what SMEs need.</div></div>
   </div>
+  <div class="pb"><div class="pl"><i>The capital exists.</i> <b>The books it needs do not.</b></div><div class="ps">Sources: OSMEP, 2024; PIER (Bank of Thailand), Oct 2026; IFC, 2025.</div></div>
 </section>
 
 <section class="sec" style="padding-top:4px">
