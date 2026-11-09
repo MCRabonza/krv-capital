@@ -27,21 +27,24 @@
   --sans:"articulat-cf","Articulat CF",sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
+html{overflow-y:scroll}
 html,body{background:var(--base);color:var(--cream);font-family:var(--sans);min-height:100%}
-body{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 16px 48px}
-.wrap{width:100%;max-width:880px}
-.label{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--jade);font-weight:700}
-h1{font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(40px,7vw,64px);line-height:1.05;margin-top:14px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:44px}
-.card{display:block;background:var(--forest);border:1px solid var(--line);padding:32px 30px 30px;color:var(--cream);text-decoration:none;transition:border-color .15s}
+body{min-height:100vh;padding-top:72px;font-weight:300}
+/* Body rails = pulse.krv.co .page: clamp(40px,5vw,80px), max 1440, centred. */
+.page{padding:44px clamp(40px,5vw,80px) 72px;max-width:1440px;margin:0 auto}
+@media (max-width:768px){.page{padding:44px 24px 72px}}
+.kicker{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.2em;color:var(--jade);margin-bottom:10px;line-height:1}
+.h-title{font-family:var(--display);font-style:italic;font-size:44px;font-weight:400;color:var(--cream);line-height:1;margin-bottom:6px;letter-spacing:-.005em}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:40px}
+.card{display:block;background:var(--forest);border:1px solid rgba(247,243,231,0.1);padding:30px 30px 28px;color:var(--cream);text-decoration:none;transition:border-color .15s}
 .card:hover,.card:focus-visible{border-color:var(--jade);outline:none}
-.card .k{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--e2);font-weight:700}
-.card h2{font-family:var(--display);font-style:italic;font-weight:400;font-size:30px;line-height:1.1;margin-top:14px}
-.card p{font-size:15px;line-height:1.5;color:var(--muted);margin-top:12px}
-.card .go{display:inline-block;margin-top:24px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--cream);border-bottom:1px solid var(--jade);padding-bottom:3px}
-.foot{margin-top:48px;font-size:12px;line-height:1.6;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
+.card .k{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--e2);font-weight:500}
+.card h2{font-family:var(--display);font-style:italic;font-weight:400;font-size:26px;line-height:1.15;margin-top:12px}
+.card p{font-size:13px;line-height:1.6;color:rgba(247,243,231,0.55);margin-top:10px;max-width:560px}
+.card .go{display:inline-block;margin-top:22px;font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--cream);border-bottom:1px solid var(--jade);padding-bottom:3px}
+.foot{margin-top:48px;font-size:11px;line-height:1.6;color:rgba(247,243,231,0.55);border-top:1px solid rgba(247,243,231,0.1);padding-top:16px}
 .foot a{color:var(--cream)}
-@media (max-width:640px){.grid{grid-template-columns:1fr}body{padding-top:112px}}
+@media (max-width:768px){.grid{grid-template-columns:1fr}.h-title{font-size:36px}}
 </style>
 </head>
 <body>
@@ -61,6 +64,8 @@ h1{font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(
   border-bottom:1px solid var(--border);
   z-index:950;
   box-sizing:border-box;
+  /* Inherited metrics of pulse.krv.co body, which the nav links pick up there. */
+  font-family:var(--sans); font-size:13px; font-weight:300; line-height:1.6;
 }
 .topbar *{box-sizing:border-box;margin:0;padding:0}
 .topbar-inner{
@@ -95,6 +100,8 @@ h1{font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(
 @media (max-width:980px){ .tb-nav-primary, .tb-divider { display:none; } }
 @media (max-width:420px){ .tb-nav { gap:20px; } .tb-wordmark img { height:19px; } }
 @media print{ .topbar{ display:none; } }
+/* Always reserve the scrollbar, as pulse.krv.co does, so the 1440 frame centres identically. */
+html{ overflow-y:scroll; }
 </style>
 <header class="topbar" role="banner">
  <div class="topbar-inner">
@@ -120,9 +127,9 @@ h1{font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(
  </div>
 </header>
 
-<main class="wrap">
-  <div class="label">Investors</div>
-  <h1>Investor Relations</h1>
+<main class="page">
+  <div class="kicker">KRV &amp; Co. / Investors</div>
+  <h1 class="h-title">Investor Relations</h1>
   <div class="grid">
     <a class="card" href="roadshow/">
       <div class="k">Open to all</div>

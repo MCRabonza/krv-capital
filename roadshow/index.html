@@ -297,6 +297,8 @@ h2{font-family:var(--display);font-style:italic;font-weight:300;font-size:20px;l
   border-bottom:1px solid var(--border);
   z-index:950;
   box-sizing:border-box;
+  /* Inherited metrics of pulse.krv.co body, which the nav links pick up there. */
+  font-family:var(--sans); font-size:13px; font-weight:300; line-height:1.6;
 }
 .topbar *{box-sizing:border-box;margin:0;padding:0}
 .topbar-inner{
@@ -331,6 +333,8 @@ h2{font-family:var(--display);font-style:italic;font-weight:300;font-size:20px;l
 @media (max-width:980px){ .tb-nav-primary, .tb-divider { display:none; } }
 @media (max-width:420px){ .tb-nav { gap:20px; } .tb-wordmark img { height:19px; } }
 @media print{ .topbar{ display:none; } }
+/* Always reserve the scrollbar, as pulse.krv.co does, so the 1440 frame centres identically. */
+html{ overflow-y:scroll; }
 </style>
 <header class="topbar" role="banner">
  <div class="topbar-inner">
