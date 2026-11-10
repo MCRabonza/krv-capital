@@ -235,12 +235,10 @@ h2{font-family:var(--display);font-style:italic;font-weight:300;font-size:20px;l
 @media screen{body{padding-top:146px!important}}
 @media screen and (max-width:1100px){body{padding-top:122px!important}}
 @media print{.rs-bar,#krvInv{display:none!important}}
-/* Online the teaser runs full width: bands edge to edge, content on the pulse.krv.co rails (max 1440, clamp(40px,5vw,80px)). The A4 PDF keeps the sheet. */
+/* Online the teaser stays a sheet of paper, widened so its edges sit on the pulse.krv.co rails (max 1440, clamp(40px,5vw,80px)). The A4 PDF is unchanged. */
 @media screen and (min-width:1100px){
-  html{background:#0d1f17}
-  body{padding-bottom:0!important}
-  .page{width:auto!important;height:auto!important;box-shadow:none!important;overflow:visible!important}
-  .page>.hd,.page>.sec{padding-left:calc(max(clamp(40px,5vw,80px),(100vw - 1440px)/2 + clamp(40px,5vw,80px)) / 1.35)!important;padding-right:calc(max(clamp(40px,5vw,80px),(100vw - 1440px)/2 + clamp(40px,5vw,80px)) / 1.35)!important}
+  body{padding-bottom:48px!important}
+  .page{width:calc((min(100vw,1440px) - 2 * clamp(40px,5vw,80px)) / 1.35)!important;height:auto!important;overflow:visible!important}
   .page .grow{display:none}
 }
 .rs-bar{position:fixed;top:72px;left:0;right:0;height:50px;z-index:940;background:#0d1f17;border-bottom:1px solid rgba(247,243,231,0.1);font-family:'articulat-cf','Inter',sans-serif}
