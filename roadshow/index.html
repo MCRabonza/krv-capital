@@ -221,11 +221,13 @@ html{ overflow-y:scroll; }
     <div><label for="gr_fn">First name *</label><input id="gr_fn" name="firstname" autocomplete="given-name" required></div>
     <div><label for="gr_ln">Last name *</label><input id="gr_ln" name="lastname" autocomplete="family-name" required></div>
     <div><label for="gr_em">Email *</label><input id="gr_em" name="email" type="email" autocomplete="email" required></div>
-    <div><label for="gr_ph">Phone, LINE or WhatsApp</label><input id="gr_ph" name="phone" autocomplete="tel" placeholder="+66"></div>
+    <div><label for="gr_ph">Phone *</label><input id="gr_ph" name="phone" autocomplete="tel" placeholder="+66" required></div>
     <div><label for="gr_co">Country *</label><select id="gr_co" name="country" required><option value="">Select</option><option value="TH">Thailand</option><option value="SG">Singapore</option><option value="HK">Hong Kong SAR</option><option value="PH">Philippines</option><option value="MY">Malaysia</option><option value="ID">Indonesia</option><option value="VN">Vietnam</option><option value="JP">Japan</option><option value="CN">China</option><option value="AE">United Arab Emirates</option><option value="GB">United Kingdom</option><option value="CH">Switzerland</option><option value="US">United States</option><option value="AU">Australia</option><option value="OTHER">Other</option></select></div>
-    <div><label for="gr_it">I am *</label><select id="gr_it" name="investor_type" required><option value="">Select</option><option value="individual_or_family_office">An individual investor or family office</option><option value="lender">A lender or capital provider</option><option value="advisor">An advisor introducing investors</option><option value="other">Other</option></select></div>
-    <div><label for="gr_in">Interested in *</label><select id="gr_in" name="instrument" required><option value="">Select</option><option value="senior">Senior</option><option value="mezzanine">Mezzanine</option><option value="equity">Equity</option><option value="more_than_one">More than one</option></select></div>
-    <div><label for="gr_tk">Tickets of THB 1,000,000</label><select id="gr_tk" name="tickets"><option value="">Select</option><option>1</option><option>2</option><option>3</option><option>5</option><option>10 or more</option></select></div>
+    <div><label for="gr_it">I am *</label><select id="gr_it" name="investor_type" required><option value="">Select</option><option value="individual">An individual investor</option><option value="family_office">A family office</option><option value="lender">A lender or capital provider</option><option value="advisor">An advisor introducing investors</option><option value="other">Other</option></select></div>
+    <div><label>Interested in *</label><div id="gr_in" style="display:flex;gap:14px;padding:10px 0"><label class="chk"><input type="checkbox" value="1"> Senior</label><label class="chk"><input type="checkbox" value="3"> Mezzanine</label><label class="chk"><input type="checkbox" value="2"> Equity</label></div></div>
+    <div><label for="gr_tk">Tickets of THB 1,000,000</label><select id="gr_tk" name="tickets"><option value="">Select</option><option>1</option><option>2</option><option>3</option><option>5</option><option value="10">10 or more</option></select></div>
+    <div><label for="gr_ch">Best reached on</label><select id="gr_ch" name="contact_channel"><option value="">Select</option><option value="phone">Phone</option><option value="line">LINE</option><option value="whatsapp">WhatsApp</option></select></div>
+    <div><label for="gr_hd">LINE or WhatsApp ID</label><input id="gr_hd" name="contact_handle"></div>
     <div class="full"><label for="gr_ib">Introduced by</label><input id="gr_ib" name="introduced_by" placeholder="Name, if any"></div>
     <div class="full"><label for="gr_nt">Questions or comments</label><textarea id="gr_nt" name="note"></textarea></div>
     <div class="full"><label class="chk"><input type="checkbox" id="gr_pd" name="pdpa_consent"> I consent to KRV &amp; Co. keeping my details to share information on the 2027 Capital Programme, under Thailand&rsquo;s Personal Data Protection Act. *</label></div>
@@ -267,6 +269,7 @@ html{ overflow-y:scroll; }
     if(!okEmail(em)){err.textContent='Please enter a valid email.'; err.style.display='block'; return;}
     save(em);
     if(!GATE){ openReg(em,'Full access opens shortly. Register now and Michael will clear you personally; the deck and your <b>KRAiON</b> Terminal login follow.'); return; }
+    openReg(em,'Confirm your details below. The full Programme deck opens as soon as you submit.'); return;
     var btn=document.getElementById('gvBtn'); btn.disabled=true; btn.innerHTML='Checking&hellip;';
     fetch(GATE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'view',email:em})})
       .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
@@ -277,27 +280,37 @@ html{ overflow-y:scroll; }
 
   document.getElementById('grForm').addEventListener('submit',function(e){
     e.preventDefault(); var f=e.target, ok=true, err=document.getElementById('grErr'); err.style.display='none';
-    ['gr_fn','gr_ln','gr_em','gr_co','gr_it','gr_in'].forEach(function(id){var x=document.getElementById(id);
+    ['gr_fn','gr_ln','gr_em','gr_ph','gr_co','gr_it'].forEach(function(id){var x=document.getElementById(id);
       var bad=!x.value.trim()||(x.type==='email'&&!okEmail(x.value.trim())); x.style.borderColor=bad?'#c05040':''; if(bad) ok=false;});
+    var doors=Array.prototype.map.call(document.querySelectorAll('#gr_in input:checked'),function(x){return +x.value});
+    document.getElementById('gr_in').style.color=doors.length?'':'#e07a6f'; if(!doors.length) ok=false;
     var pd=document.getElementById('gr_pd'); if(!pd.checked){ ok=false; pd.parentNode.style.color='#e07a6f'; } else pd.parentNode.style.color='';
     if(!ok){ err.textContent='Please complete the fields marked * and give your consent.'; err.style.display='block'; return; }
-    var d={action:'register'}; Array.prototype.forEach.call(f.elements,function(x){ if(x.name&&x.type!=='checkbox') d[x.name]=x.value.trim(); });
-    d.email=d.email.toLowerCase(); d.pdpa_consent=true; d.referrer_page=location.href; d.site_referrer=document.referrer||''; save(d.email);
-    var done=function(cleared){ document.getElementById('grBox').innerHTML='<button class="x" type="button" aria-label="Close" onclick="document.getElementById(\'gmReg\').classList.remove(\'open\')">&times;</button>'+
-      '<div class="kk">'+(cleared?'Cleared':'Registered')+'</div><h2>Thank you, '+d.firstname.replace(/[<>&]/g,'')+'.</h2>'+
-      '<p class="msg">'+(cleared?'You are already cleared. Use <b>View the Deck</b> to open it now.':'Michael clears every registration personally. Once you are cleared, <b>View the Deck</b> opens the full Programme deck, and your <b>KRAiON</b> Terminal login follows.')+
-      '</p><p class="msg" style="margin-top:12px">To talk now, write to <a href="mailto:mcr@krv.co">mcr@krv.co</a>.</p>'; };
+    var v=function(id){return document.getElementById(id).value.trim()};
+    var d={form_type:'programme_interest', firstname:v('gr_fn'), lastname:v('gr_ln'), email:v('gr_em').toLowerCase(), phone:v('gr_ph'),
+      country:v('gr_co'), investor_type:v('gr_it'), doors:doors, tickets:parseInt(v('gr_tk')||'1',10),
+      pdpa_consent:true, pdpa_text_version:'capital-krv-co-2026-11-16-v1', consent_at:new Date().toISOString(),
+      referrer_page:location.href, site_referrer:document.referrer||''};
+    ['contact_channel:gr_ch','contact_handle:gr_hd','introduced_by:gr_ib','note:gr_nt'].forEach(function(p){var k=p.split(':'); var x=v(k[1]); if(x) d[k[0]]=x;});
+    var link=(new URLSearchParams(location.search)).get('ref'); if(link) d.link_ref=link;
+    save(d.email);
+    var names={1:'Senior',2:'Equity',3:'Mezzanine'};
+    var done=function(url){ document.getElementById('grBox').innerHTML='<button class="x" type="button" aria-label="Close" onclick="document.getElementById(\'gmReg\').classList.remove(\'open\')">&times;</button>'+
+      '<div class="kk">Registered</div><h2>Thank you, '+d.firstname.replace(/[<>&]/g,'')+'.</h2>'+
+      (url?'<p class="msg">Your full access link to the 2027 Capital Programme deck is ready. It is valid for 24 hours.</p><p style="margin-top:18px"><a class="gbtn p" href="'+url.replace(/"/g,'')+'">Open the Deck &rarr;</a></p>'
+          :'<p class="msg">Michael clears every registration personally. The full Programme deck and your <b>KRAiON</b> Terminal login follow.</p>')+
+      '<p class="msg" style="margin-top:14px">To talk now, write to <a href="mailto:mcr@krv.co">mcr@krv.co</a>.</p>'; };
     if(!GATE){
-      var body=['Registration: 2027 Capital Programme','','Name: '+d.firstname+' '+d.lastname,'Email: '+d.email,'Phone / LINE / WhatsApp: '+d.phone,'Country: '+d.country,
-        'I am: '+d.investor_type,'Interested in: '+d.instrument,'Tickets: '+d.tickets,'Introduced by: '+d.introduced_by,'','PDPA consent: given','',d.note].join('\n');
+      var body=['Registration: 2027 Capital Programme','','Name: '+d.firstname+' '+d.lastname,'Email: '+d.email,'Phone: '+d.phone,'Best reached on: '+(d.contact_channel||'')+' '+(d.contact_handle||''),'Country: '+d.country,
+        'I am: '+d.investor_type,'Interested in: '+doors.map(function(x){return names[x]}).join(', '),'Tickets: '+d.tickets,'Introduced by: '+(d.introduced_by||''),'','PDPA consent: given '+d.consent_at,'',d.note||''].join('\n');
       location.href='mailto:mcr@krv.co?subject='+encodeURIComponent('2027 Capital Programme: registration, '+d.firstname+' '+d.lastname)+'&body='+encodeURIComponent(body);
-      done(false); return;
+      done(''); return;
     }
     var btn=document.getElementById('grBtn'); btn.disabled=true; btn.innerHTML='Sending&hellip;';
     fetch(GATE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)})
-      .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
-      .then(function(r){ done(r.status==='cleared'); })
-      .catch(function(){ btn.disabled=false; btn.innerHTML='Register &rarr;'; err.innerHTML='Something went wrong. Please write to <a href="mailto:mcr@krv.co" style="color:#D4A853">mcr@krv.co</a>.'; err.style.display='block'; });
+      .then(function(r){ if(r.status===429){ btn.disabled=false; btn.innerHTML='Register &rarr;'; err.textContent='Too many attempts. Please try again later, or write to mcr@krv.co.'; err.style.display='block'; throw 0; } if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(r){ if(!r.ok) throw new Error('not ok'); done(r.deck_url||''); })
+      .catch(function(x){ if(x===0) return; btn.disabled=false; btn.innerHTML='Register &rarr;'; err.innerHTML='Something went wrong. Please write to <a href="mailto:mcr@krv.co" style="color:#D4A853">mcr@krv.co</a>.'; err.style.display='block'; });
   });
 })();
 </script>
