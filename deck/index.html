@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>KRV &amp; Co. · 2027 Capital Programme · Deck</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+<meta name="theme-color" content="#0d1f17">
+<link rel="stylesheet" href="https://use.typekit.net/lso5kkg.css">
+<style>
+:root{
+  --base:#0d1f17; --forest:#142d23; --slide:#142d26; --cream:#f7f3e7; --muted:#a8b5ae;
+  --jade:#4a8f7e; --jade-lt:#6FB39E; --gold:#D4A853; --line:rgba(247,243,231,0.1);
+  --display:"miller-display","Miller Display",serif;
+  --sans:"articulat-cf","Articulat CF",sans-serif;
+  --bar:52px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--base);color:var(--cream);font-family:var(--sans);font-weight:300;overflow:hidden}
+body{padding-top:72px}
+/* Sub-bar, as pulse.krv.co's ticker row: label left, pager centre, actions right. */
+.sub{height:var(--bar);border-bottom:1px solid var(--line);display:flex;align-items:center}
+.sub-in{width:100%;max-width:1440px;margin:0 auto;padding:0 clamp(40px,5vw,80px);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px}
+@media (max-width:768px){.sub-in{padding:0 16px;grid-template-columns:auto 1fr}.sub .lbl{display:none}}
+.lbl{font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--jade);white-space:nowrap}
+.lbl b{color:var(--cream);font-weight:500}
+.pager{display:flex;align-items:center;gap:6px;justify-self:center}
+.btn{font-family:var(--sans);font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--cream);
+  background:transparent;border:1px solid rgba(247,243,231,0.18);height:30px;padding:0 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;white-space:nowrap}
+.btn:hover:not(:disabled){border-color:var(--jade);color:var(--jade-lt)}
+.btn:disabled{opacity:.3;cursor:default}
+.btn.arrow{width:34px;padding:0;justify-content:center;font-size:14px;letter-spacing:0}
+.btn.gold{border-color:var(--gold);color:var(--gold)}
+.btn.gold:hover{background:var(--gold);color:var(--base)}
+.count{white-space:nowrap;font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;min-width:92px;text-align:center}
+.count input{width:34px;background:transparent;border:0;border-bottom:1px solid rgba(247,243,231,0.25);color:var(--cream);font:inherit;text-align:center}
+.acts{display:flex;gap:8px;justify-self:end}
+@media (max-width:560px){#print,.acts .x{display:none}.acts{gap:6px}.pw{display:none}.acts .btn{padding:0 9px}.count{min-width:0}}
+/* Stage: one page at a time, fitted to the window. */
+.stage{position:relative;height:calc(100% - var(--bar));display:flex;align-items:center;justify-content:center;padding:24px clamp(16px,3vw,48px) 28px;user-select:none}
+.sheet{position:relative;background:var(--slide);box-shadow:0 18px 50px rgba(0,0,0,.45);line-height:0}
+.sheet canvas{display:block;width:100%;height:100%}
+.hit{position:absolute;top:0;bottom:0;width:50%;cursor:pointer;z-index:2}
+.hit.l{left:0;cursor:w-resize}.hit.r{right:0;cursor:e-resize}
+.msg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:24px}
+.msg .k{font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--jade)}
+.msg h1{font-family:var(--display);font-style:italic;font-weight:400;font-size:32px;line-height:1.1}
+.msg p{font-size:13px;line-height:1.6;color:rgba(247,243,231,.6);max-width:440px}
+.msg a{color:var(--gold)}
+.hint{position:absolute;bottom:6px;left:0;right:0;text-align:center;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(247,243,231,.28)}
+@media (max-width:768px){.hint{display:none}}
+[hidden]{display:none!important}
+@media print{body>*{display:none!important}}
+</style>
+</head>
+<body>
+<!-- ═════════════════════════════════════════════════════════════
+     KRV.co UNIFIED TOPBAR · ported from pulse.krv.co (same markup,
+     same rules, same wordmark asset). Vars scoped to .topbar so the
+     page underneath keeps its own tokens. Investors is the active link.
+     ═════════════════════════════════════════════════════════════ -->
+<style>
+.topbar{
+  --bg:#0d1f17; --cream:#F7F3E7; --accent:#4A8F7E; --accent-lt:#6FB39E;
+  --border:rgba(247,243,231,0.1); --sans:'articulat-cf','Inter',sans-serif;
+  --rail:clamp(40px, 5vw, 80px); --page-max:1440px; --topbar-h:72px;
+  position:fixed; top:0; left:0; right:0;
+  height:var(--topbar-h);
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+  z-index:950;
+  box-sizing:border-box;
+  /* Inherited metrics of pulse.krv.co body, which the nav links pick up there. */
+  font-family:var(--sans); font-size:13px; font-weight:300; line-height:1.6;
+}
+.topbar *{box-sizing:border-box;margin:0;padding:0}
+.topbar-inner{
+  height:100%;
+  max-width:var(--page-max);
+  margin:0 auto;
+  padding: 0 var(--rail);
+  display:flex; align-items:center; justify-content:space-between;
+}
+@media (max-width:768px){ .topbar-inner{ padding:0 24px; } }
+.topbar-left,
+.topbar-right { display:flex; align-items:center; gap:0; flex-wrap:nowrap; }
+.tb-wordmark { display:inline-flex; align-items:center; line-height:0; }
+.tb-wordmark img { display:block; height:22px; width:auto; }
+.tb-nav { display:flex; align-items:center; gap:32px; }
+.tb-nav a {
+  font-family:var(--sans); font-size:11px; font-weight:500;
+  letter-spacing:0.16em; text-transform:uppercase;
+  color:var(--cream); text-decoration:none;
+  transition: color 0.15s ease;
+  white-space:nowrap;
+}
+.tb-nav a:hover { color:var(--accent-lt); }
+.tb-nav a.is-active { color:var(--accent); }
+.tb-nav a.is-active:hover { color:var(--accent); }
+.tb-divider {
+  width:1px; height:18px;
+  background: rgba(247,243,231,0.18);
+  margin: 0 24px;
+}
+/* Phone: the primary links give way; Clients and Investors stay. */
+@media (max-width:980px){ .tb-nav-primary, .tb-divider { display:none; } }
+@media (max-width:420px){ .tb-nav { gap:20px; } .tb-wordmark img { height:19px; } }
+@media print{ .topbar{ display:none; } }
+/* Always reserve the scrollbar, as pulse.krv.co does, so the 1440 frame centres identically. */
+html{ overflow-y:scroll; }
+</style>
+<header class="topbar" role="banner">
+ <div class="topbar-inner">
+  <div class="topbar-left">
+    <a class="tb-wordmark" href="https://krv.co" aria-label="KRV&amp;Co. — home">
+      <img src="../assets/krv-wordmark-white.png" alt="KRV&amp;Co.">
+    </a>
+  </div>
+  <div class="topbar-right">
+    <nav class="tb-nav tb-nav-primary" aria-label="Primary">
+      <a href="https://pulse.krv.co">Private Market Pulse</a>
+      <a href="https://krv.co/about">About</a>
+      <a href="https://krv.co/services">Services</a>
+      <a href="https://krv.co/resources">Resources</a>
+      <a href="https://krv.co/contact">Contact</a>
+    </nav>
+    <div class="tb-divider" aria-hidden="true"></div>
+    <nav class="tb-nav tb-nav-aux" aria-label="Private">
+      <a href="https://app.kraion.io/login" target="_blank" rel="noopener">Clients</a>
+      <a href="https://capital.krv.co" class="is-active" aria-current="page">Investors</a>
+    </nav>
+  </div>
+ </div>
+</header>
+
+<div class="sub">
+ <div class="sub-in">
+  <div class="lbl">2027 Capital Programme &nbsp;/&nbsp; <b>Private &amp; Confidential</b></div>
+  <div class="pager">
+    <button class="btn arrow" id="prev" aria-label="Previous page" disabled>&#8593;</button>
+    <span class="count" id="count"><span class="pw">Page </span><input id="pg" value="1" inputmode="numeric" aria-label="Page number"> / <span id="tot">–</span></span>
+    <button class="btn arrow" id="next" aria-label="Next page" disabled>&#8595;</button>
+  </div>
+  <div class="acts">
+    <button class="btn" id="print" disabled>Print</button>
+    <button class="btn" id="dl" disabled>Download<span class="x">&nbsp;PDF</span></button>
+    <a class="btn gold" href="../roadshow/#register">Register<span class="x">&nbsp;Interest</span></a>
+  </div>
+ </div>
+</div>
+
+<main class="stage" id="stage">
+  <div class="sheet" id="sheet" hidden>
+    <div class="hit l" id="hl" title="Previous page"></div>
+    <div class="hit r" id="hr" title="Next page"></div>
+    <canvas id="cv"></canvas>
+  </div>
+  <div class="msg" id="msg">
+    <div class="k">KRV &amp; Co. / Investors</div>
+    <h1>Opening the deck&hellip;</h1>
+  </div>
+  <div class="hint" id="hint" hidden>&#8593; &#8595; or Page Up / Page Down to turn pages</div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+(function(){
+  // The signed link comes in the hash (#u=...), so it never reaches a server log.
+  var u=(new URLSearchParams(location.hash.slice(1))).get('u')||'';
+  var local=/^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+  var okUrl=/^https:\/\/kraion-terminal\.vercel\.app\/api\/intake\/deck\?t=[\w.\-]+$/.test(u)||(local&&/^\/[\w\/.\-]+\.(pdf|bin)$/.test(u));
+  var msg=document.getElementById('msg'), sheet=document.getElementById('sheet'), cv=document.getElementById('cv');
+  var pgIn=document.getElementById('pg'), tot=document.getElementById('tot');
+  var prev=document.getElementById('prev'), next=document.getElementById('next');
+  var pbtn=document.getElementById('print'), dbtn=document.getElementById('dl');
+  var NAME='KRV & Co. 2027 Capital Programme.pdf';
+  var doc=null, n=1, blobUrl='', busy=false, want=0;
+
+  function fail(){
+    msg.innerHTML='<div class="k">KRV &amp; Co. / Investors</div><h1>This link has expired.</h1>'+
+      '<p>Deck links last 24 hours. <a href="../roadshow/#deck">Open the deck again</a> with your email, or write to <a href="mailto:mcr@krv.co">mcr@krv.co</a>.</p>';
+    msg.hidden=false; sheet.hidden=true;
+  }
+  if(!okUrl||!window.pdfjsLib){ fail(); return; }
+  pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  fetch(u,{credentials:'omit'})
+    .then(function(r){ if(!r.ok) throw r.status; return r.arrayBuffer(); })
+    .then(function(buf){
+      blobUrl=URL.createObjectURL(new Blob([buf],{type:'application/pdf'}));
+      return pdfjsLib.getDocument({data:new Uint8Array(buf)}).promise;
+    })
+    .then(function(d){
+      doc=d; tot.textContent=d.numPages; msg.hidden=true; sheet.hidden=false; document.getElementById('hint').hidden=false;
+      pbtn.disabled=dbtn.disabled=false;
+      var h=parseInt((location.hash.match(/[&#]p=(\d+)/)||[])[1],10); go(h||1);
+    })
+    .catch(function(e){
+      // Network or CORS refusal: hand the browser the PDF itself rather than leave a blank page.
+      if(typeof e!=='number'&&okUrl&&!local){ location.replace(u); return; }
+      fail();
+    });
+
+  function fit(vp){
+    var st=document.getElementById('stage'), cs=getComputedStyle(st);
+    var aw=st.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight);
+    var ah=st.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom);
+    return Math.min(aw/vp.width, ah/vp.height);
+  }
+  function render(){
+    if(!doc) return;
+    if(busy){ want=1; return; } busy=true;
+    doc.getPage(n).then(function(p){
+      var base=p.getViewport({scale:1}), s=fit(base), dpr=Math.min(window.devicePixelRatio||1,3);
+      var vp=p.getViewport({scale:s*dpr});
+      var w=Math.floor(base.width*s), h=Math.floor(base.height*s);
+      var off=document.createElement('canvas'); off.width=Math.floor(vp.width); off.height=Math.floor(vp.height);
+      return p.render({canvasContext:off.getContext('2d'),viewport:vp,background:'rgba(0,0,0,0)'}).promise.then(function(){
+        sheet.style.width=w+'px'; sheet.style.height=h+'px';
+        cv.width=off.width; cv.height=off.height; cv.getContext('2d').drawImage(off,0,0);
+      });
+    }).then(function(){ busy=false; if(want){ want=0; render(); } }, function(){ busy=false; });
+  }
+  function go(k){
+    if(!doc) return;
+    n=Math.max(1,Math.min(doc.numPages,k)); pgIn.value=n;
+    prev.disabled=n<=1; next.disabled=n>=doc.numPages;
+    history.replaceState(null,'','#u='+encodeURIComponent(u)+'&p='+n);
+    render();
+  }
+  prev.onclick=function(){go(n-1)}; next.onclick=function(){go(n+1)};
+  document.getElementById('hl').onclick=function(){go(n-1)}; document.getElementById('hr').onclick=function(){go(n+1)};
+  pgIn.addEventListener('change',function(){go(parseInt(pgIn.value,10)||n)});
+  pgIn.addEventListener('focus',function(){pgIn.select()});
+  document.addEventListener('keydown',function(e){
+    if(e.target===pgIn||e.ctrlKey||e.metaKey||e.altKey) return;
+    var k=e.key;
+    if(k==='ArrowRight'||k==='ArrowDown'||k==='PageDown'||k===' '){e.preventDefault();go(n+1);}
+    else if(k==='ArrowLeft'||k==='ArrowUp'||k==='PageUp'){e.preventDefault();go(n-1);}
+    else if(k==='Home'){e.preventDefault();go(1);}
+    else if(k==='End'&&doc){e.preventDefault();go(doc.numPages);}
+  });
+  var wheelAt=0;
+  document.getElementById('stage').addEventListener('wheel',function(e){
+    e.preventDefault(); var t=Date.now(); if(t-wheelAt<350||Math.abs(e.deltaY)<8) return; wheelAt=t; go(n+(e.deltaY>0?1:-1));
+  },{passive:false});
+  var tx=0,ty=0;
+  document.getElementById('stage').addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+  document.getElementById('stage').addEventListener('touchend',function(e){
+    var dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
+    if(Math.max(Math.abs(dx),Math.abs(dy))>40) go(n+((Math.abs(dx)>Math.abs(dy)?dx:dy)<0?1:-1));
+  },{passive:true});
+  // A new link pasted into the same tab only changes the hash: start again from it.
+  window.addEventListener('hashchange',function(){location.reload()});
+  var rt; window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(render,120)});
+
+  dbtn.onclick=function(){ if(!blobUrl) return; var a=document.createElement('a'); a.href=blobUrl; a.download=NAME; document.body.appendChild(a); a.click(); a.remove(); };
+  pbtn.onclick=function(){
+    if(!blobUrl) return;
+    var f=document.getElementById('pf'); if(f) f.remove();
+    f=document.createElement('iframe'); f.id='pf'; f.style.cssText='position:fixed;width:0;height:0;border:0;right:0;bottom:0';
+    f.onload=function(){ try{ f.contentWindow.focus(); f.contentWindow.print(); }catch(x){ window.open(blobUrl,'_blank'); } };
+    f.src=blobUrl; document.body.appendChild(f);
+  };
+})();
+</script>
+</body>
+</html>
