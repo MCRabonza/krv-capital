@@ -196,17 +196,18 @@ html{ overflow-y:scroll; }
 </header>
 <div class="gbar"><div class="gbar-in">
   <div><div class="k">2027 Capital Programme &middot; Teaser</div><div class="h">THB 35M. Senior, Mezzanine, Equity.</div></div>
-  <div class="b"><button class="gbtn p" type="button" data-gate-view>View the Deck</button><button class="gbtn s" type="button" data-gate-register>Register for Full Access</button></div>
+  <div class="b"><button class="gbtn p" type="button" data-gate-view>View the Deck</button><button class="gbtn s" type="button" data-gate-register>Register Interest</button></div>
 </div></div>
 
 <div class="gm" id="gmView" role="dialog" aria-modal="true"><div class="box">
   <button class="x" type="button" data-gate-close aria-label="Close">&times;</button>
-  <div class="kk">Registered investors</div>
+  <div class="kk">2027 Capital Programme</div>
   <h2>View the Deck.</h2>
-  <p class="tg">Enter the email you registered with. If you are cleared, the full Programme deck opens in your browser.</p>
+  <p class="tg">Enter your email and the full Programme deck opens.</p>
   <form id="gvForm" novalidate>
     <label for="gv_em">Email</label><input id="gv_em" type="email" autocomplete="email" placeholder="your@mail.com" required>
-    <div class="act"><div class="meta">Not registered yet? <a href="#register" data-gate-register style="color:#D4A853">Register for full access</a>.</div>
+    <label class="chk" style="margin-top:14px"><input type="checkbox" id="gv_pd"> I consent to KRV &amp; Co. keeping my email to share information on the 2027 Capital Programme, under Thailand&rsquo;s Personal Data Protection Act. *</label>
+    <div class="act"><div class="meta">To invest, <a href="#register" data-gate-register style="color:#D4A853">register your interest</a>.</div>
     <button class="gbtn p" type="submit" id="gvBtn">Open the Deck &rarr;</button></div>
     <div class="err" id="gvErr"></div>
   </form>
@@ -215,8 +216,8 @@ html{ overflow-y:scroll; }
 <div class="gm" id="gmReg" role="dialog" aria-modal="true"><div class="box" id="grBox">
   <button class="x" type="button" data-gate-close aria-label="Close">&times;</button>
   <div class="kk">2027 Capital Programme</div>
-  <h2>Register for Full Access.</h2>
-  <p class="tg" id="grTag">Registration gives you the full Programme deck and your first login to <b>KRAiON</b> Terminal. Michael clears every registration personally.</p>
+  <h2>Register Interest.</h2>
+  <p class="tg" id="grTag">Tell us how you would like to take part. Michael reads every registration personally.</p>
   <form id="grForm" novalidate><div class="grid2">
     <div><label for="gr_fn">First name *</label><input id="gr_fn" name="firstname" autocomplete="given-name" required></div>
     <div><label for="gr_ln">Last name *</label><input id="gr_ln" name="lastname" autocomplete="family-name" required></div>
@@ -239,7 +240,7 @@ html{ overflow-y:scroll; }
 
 <script>
 (function(){
-  var GATE='https://kraion-terminal.vercel.app/api/intake/investor';
+  var GATE='https://kraion-terminal.vercel.app/api/intake/investor', DECK=GATE?GATE.replace('/api/intake/investor','/api/intake/deck'):'';
   var vm=document.getElementById('gmView'), rm=document.getElementById('gmReg');
   function show(m){[vm,rm].forEach(function(x){x.classList.remove('open')}); m.classList.add('open');}
   function hide(){vm.classList.remove('open'); rm.classList.remove('open');}
@@ -267,15 +268,17 @@ html{ overflow-y:scroll; }
     e.preventDefault(); var em=document.getElementById('gv_em').value.trim().toLowerCase(), err=document.getElementById('gvErr');
     err.style.display='none';
     if(!okEmail(em)){err.textContent='Please enter a valid email.'; err.style.display='block'; return;}
+    var pd=document.getElementById('gv_pd'); if(!pd.checked){ pd.parentNode.style.color='#e07a6f'; err.textContent='Please give your consent.'; err.style.display='block'; return; } pd.parentNode.style.color='';
     save(em);
-    if(!GATE){ openReg(em,'Full access opens shortly. Register now and Michael will clear you personally; the deck and your <b>KRAiON</b> Terminal login follow.'); return; }
-    openReg(em,'Confirm your details below. The full Programme deck opens as soon as you submit.'); return;
-    var btn=document.getElementById('gvBtn'); btn.disabled=true; btn.innerHTML='Checking&hellip;';
-    fetch(GATE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'view',email:em})})
-      .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
-      .then(function(r){ if(r.cleared){ openDeck(r); } else { btn.disabled=false; btn.innerHTML='Open the Deck &rarr;';
-        openReg(em,'This email is not cleared yet. Register below and Michael will clear you personally; the deck and your <b>KRAiON</b> Terminal login follow.'); } })
-      .catch(function(){ btn.disabled=false; btn.innerHTML='Open the Deck &rarr;'; err.innerHTML='Something went wrong. Please write to <a href="mailto:mcr@krv.co" style="color:#D4A853">mcr@krv.co</a>.'; err.style.display='block'; });
+    if(!DECK){ openReg(em); return; }
+    var btn=document.getElementById('gvBtn'); btn.disabled=true; btn.innerHTML='Opening&hellip;';
+    var reset=function(){ btn.disabled=false; btn.innerHTML='Open the Deck &rarr;'; };
+    var d={email:em, pdpa_consent:true, pdpa_text_version:'capital-krv-co-2026-11-16-v1', consent_at:new Date().toISOString(), referrer_page:location.href};
+    var link=(new URLSearchParams(location.search)).get('ref'); if(link) d.link_ref=link;
+    fetch(DECK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)})
+      .then(function(r){ if(r.status===429){ reset(); err.textContent='Too many attempts. Please try again later, or write to mcr@krv.co.'; err.style.display='block'; throw 0; } if(!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(r){ if(!r.ok||!r.deck_url) throw new Error('no deck'); location.href=r.deck_url; })
+      .catch(function(x){ if(x===0) return; reset(); openReg(em,'Complete your details below and the full Programme deck opens as soon as you submit.'); });
   });
 
   document.getElementById('grForm').addEventListener('submit',function(e){
