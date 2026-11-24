@@ -43,6 +43,7 @@ body{padding-top:72px}
 /* Stage: one page at a time, fitted to the window. */
 .stage{position:relative;height:calc(100% - var(--bar));display:flex;align-items:center;justify-content:center;padding:24px max(clamp(40px,5vw,80px),calc((100% - 1440px)/2 + clamp(40px,5vw,80px))) 28px;user-select:none}
 @media (max-width:768px){.stage{padding:24px 16px 28px}}
+.stage:fullscreen{height:100%;padding:0;background:var(--base)}.stage:-webkit-full-screen{height:100%;padding:0;background:var(--base)}.stage:fullscreen .hint,.stage:-webkit-full-screen .hint{display:none}.stage:fullscreen .sheet,.stage:-webkit-full-screen .sheet{box-shadow:none}
 .sheet{position:relative;background:var(--slide);box-shadow:0 18px 50px rgba(0,0,0,.45);line-height:0}
 .sheet canvas{display:block;width:100%;height:100%}
 .hit{position:absolute;top:0;bottom:0;width:50%;cursor:pointer;z-index:2}
@@ -147,6 +148,7 @@ html{ overflow-y:scroll; }
     <button class="btn arrow" id="next" aria-label="Next page" disabled>&#8595;</button>
   </div>
   <div class="acts">
+    <button class="btn" id="fs" disabled hidden>Full<span class="x">&nbsp;Screen</span></button>
     <button class="btn" id="print" disabled>Print</button>
     <button class="btn" id="dl" disabled>Download<span class="x">&nbsp;PDF</span></button>
     <a class="btn gold" href="../roadshow/#register">Register<span class="x">&nbsp;Interest</span></a>
@@ -197,7 +199,7 @@ html{ overflow-y:scroll; }
     })
     .then(function(d){
       doc=d; tot.textContent=d.numPages; msg.hidden=true; sheet.hidden=false; document.getElementById('hint').hidden=false;
-      pbtn.disabled=dbtn.disabled=false;
+      pbtn.disabled=dbtn.disabled=false; fsb.disabled=false;
       var h=parseInt((location.hash.match(/[&#]p=(\d+)/)||[])[1],10); go(h||1);
     })
     .catch(function(e){
@@ -256,6 +258,7 @@ html{ overflow-y:scroll; }
     else if(k==='ArrowLeft'||k==='ArrowUp'||k==='PageUp'){e.preventDefault();go(n-1);}
     else if(k==='Home'){e.preventDefault();go(1);}
     else if(k==='End'&&doc){e.preventDefault();go(doc.numPages);}
+    else if((k==='f'||k==='F')&&!fsb.hidden&&!fsb.disabled){e.preventDefault();toggleFs();}
   });
   var wheelAt=0;
   document.getElementById('stage').addEventListener('wheel',function(e){
@@ -269,6 +272,17 @@ html{ overflow-y:scroll; }
   },{passive:true});
   // A new link pasted into the same tab only changes the hash: start again from it.
   window.addEventListener('hashchange',function(){location.reload()});
+  var fsb=document.getElementById('fs'), stg=document.getElementById('stage');
+  var fsOk=!!(stg.requestFullscreen||stg.webkitRequestFullscreen);
+  fsb.hidden=!fsOk;
+  function fsEl(){return document.fullscreenElement||document.webkitFullscreenElement}
+  function toggleFs(){
+    if(fsEl()){(document.exitFullscreen||document.webkitExitFullscreen).call(document);}
+    else{(stg.requestFullscreen||stg.webkitRequestFullscreen).call(stg);}
+  }
+  fsb.addEventListener('click',toggleFs);
+  function fsChange(){fsb.innerHTML=fsEl()?'Exit<span class="x">&nbsp;Full Screen</span>':'Full<span class="x">&nbsp;Screen</span>';setTimeout(render,60);}
+  document.addEventListener('fullscreenchange',fsChange);document.addEventListener('webkitfullscreenchange',fsChange);
   var rt; window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(render,120)});
 
   dbtn.onclick=function(){ if(!blobUrl) return; var a=document.createElement('a'); a.href=blobUrl; a.download=NAME; document.body.appendChild(a); a.click(); a.remove(); };
