@@ -57,6 +57,8 @@ body{padding-top:72px}
 @media (max-width:768px){.hint{display:none}}
 [hidden]{display:none!important}
 @media print{body>*{display:none!important}}
+.btn.arrow{border:0;width:26px;height:30px;padding:0;color:var(--cream)}.btn.arrow svg,.btn.icon svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}.btn.arrow:hover:not(:disabled),.btn.icon:hover:not(:disabled){color:var(--gold);border-color:transparent}.btn.icon{border:0;width:30px;padding:0;justify-content:center}.pager{gap:10px}.count{min-width:0;font-size:11px;letter-spacing:.18em;font-variant-numeric:tabular-nums}.count input{width:22px;border-bottom:0;padding:0}.count input:focus{outline:none;border-bottom:1px solid var(--gold)}.hint{display:none!important}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--base);font-weight:600}.btn.gold:hover{background:#e2bb6a;border-color:#e2bb6a;color:var(--base)}
 </style>
 </head>
 <body>
@@ -143,15 +145,15 @@ html{ overflow-y:scroll; }
  <div class="sub-in">
   <div class="lbl">2027 Capital Programme &nbsp;/&nbsp; <b>Private &amp; Confidential</b></div>
   <div class="pager">
-    <button class="btn arrow" id="prev" aria-label="Previous page" disabled>&#8593;</button>
-    <span class="count" id="count"><span class="pw">Page </span><input id="pg" value="1" inputmode="numeric" aria-label="Page number"> / <span id="tot">–</span></span>
-    <button class="btn arrow" id="next" aria-label="Next page" disabled>&#8595;</button>
+    <button class="btn arrow" id="prev" aria-label="Previous page" title="Previous page" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 5 8 12 15 19"/></svg></button>
+    <span class="count" id="count"><input id="pg" value="01" inputmode="numeric" aria-label="Page number"> / <span id="tot">–</span></span>
+    <button class="btn arrow" id="next" aria-label="Next page" title="Next page" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 5 16 12 9 19"/></svg></button>
   </div>
   <div class="acts">
-    <button class="btn" id="fs" disabled hidden>Full<span class="x">&nbsp;Screen</span></button>
+    <button class="btn icon" id="fs" aria-label="Full screen" title="Full screen (F)" disabled hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7"/></svg></button>
     <button class="btn" id="print" disabled>Print</button>
     <button class="btn" id="dl" disabled>Download<span class="x">&nbsp;PDF</span></button>
-    <a class="btn gold" href="../roadshow/#register">Register<span class="x">&nbsp;Interest</span></a>
+    <a class="btn gold" href="../roadshow/#register">Request<span class="x">&nbsp;Allocation</span></a>
   </div>
  </div>
 </div>
@@ -198,7 +200,7 @@ html{ overflow-y:scroll; }
       return pdfjsLib.getDocument({data:new Uint8Array(buf)}).promise;
     })
     .then(function(d){
-      doc=d; tot.textContent=d.numPages; msg.hidden=true; sheet.hidden=false; document.getElementById('hint').hidden=false;
+      doc=d; tot.textContent=String(d.numPages).padStart(2,'0'); msg.hidden=true; sheet.hidden=false; document.getElementById('hint').hidden=false;
       pbtn.disabled=dbtn.disabled=false; fsb.disabled=false;
       var h=parseInt((location.hash.match(/[&#]p=(\d+)/)||[])[1],10); go(h||1);
     })
@@ -242,7 +244,7 @@ html{ overflow-y:scroll; }
   }
   function go(k){
     if(!doc) return;
-    n=Math.max(1,Math.min(doc.numPages,k)); pgIn.value=n;
+    n=Math.max(1,Math.min(doc.numPages,k)); pgIn.value=String(n).padStart(2,'0');
     prev.disabled=n<=1; next.disabled=n>=doc.numPages;
     history.replaceState(null,'','#u='+encodeURIComponent(u)+'&p='+n);
     render();
@@ -281,7 +283,7 @@ html{ overflow-y:scroll; }
     else{(stg.requestFullscreen||stg.webkitRequestFullscreen).call(stg);}
   }
   fsb.addEventListener('click',toggleFs);
-  function fsChange(){fsb.innerHTML=fsEl()?'Exit<span class="x">&nbsp;Full Screen</span>':'Full<span class="x">&nbsp;Screen</span>';setTimeout(render,60);}
+  function fsChange(){fsb.innerHTML=fsEl()?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4l-6 6M14 4v6h6M4 20l6-6M10 20v-6H4"/></svg>':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7"/></svg>';fsb.title=fsEl()?'Exit full screen (Esc)':'Full screen (F)';fsb.setAttribute('aria-label',fsEl()?'Exit full screen':'Full screen');setTimeout(render,60);}
   document.addEventListener('fullscreenchange',fsChange);document.addEventListener('webkitfullscreenchange',fsChange);
   var rt; window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(render,120)});
 
