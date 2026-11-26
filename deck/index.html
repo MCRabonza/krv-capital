@@ -326,6 +326,7 @@ html{ overflow-y:scroll; }
 </script>
 <script>
 document.getElementById('share').addEventListener('click',function(e){ e.stopPropagation(); if(window.krv) krv.openShare(this); });
+document.querySelectorAll('a.btn.gold').forEach(function(b){ b.addEventListener('click',function(){ if(window.krv){ krv.track('request_allocation'); krv.flush(); } }); });
 </script>
 </body>
 </html>
