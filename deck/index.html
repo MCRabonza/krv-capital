@@ -74,6 +74,7 @@ body{padding-top:72px}
 @media print{body>*{display:none!important}}
 .btn.arrow{border:0;width:26px;height:30px;padding:0;color:var(--cream)}.btn.arrow svg,.btn.icon svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}.btn.arrow:hover:not(:disabled),.btn.icon:hover:not(:disabled){color:var(--gold);border-color:transparent}.btn.icon{border:0;width:30px;padding:0;justify-content:center}.pager{gap:10px}.count{min-width:0;font-size:11px;letter-spacing:.18em;font-variant-numeric:tabular-nums}.count input{width:22px;border-bottom:0;padding:0}.count input:focus{outline:none;border-bottom:1px solid var(--gold)}.hint{display:none!important}
 .btn.gold{background:var(--gold);border-color:var(--gold);color:var(--base);font-weight:600}.btn.gold:hover{background:#e2bb6a;border-color:#e2bb6a;color:var(--base)}
+.acts .btn.gold{width:180px;height:32px;padding:0;justify-content:center;box-sizing:border-box;font-weight:500;font-size:10px;letter-spacing:.16em;gap:0}
 </style>
 </head>
 <body>
@@ -166,9 +167,9 @@ html{ overflow-y:scroll; }
   </div>
   <div class="acts">
     <button class="btn icon" id="fs" aria-label="Full screen" title="Full screen (F)" disabled hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7"/></svg></button>
-    <button class="btn" id="print" disabled>Print</button>
-    <button class="btn" id="dl" disabled>Download<span class="x">&nbsp;PDF</span></button>
-    <button class="btn" id="share">Share</button>
+    <button class="btn icon" id="print" aria-label="Print" title="Print" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2M6 14h12v7H6z"/></svg></button>
+    <button class="btn icon" id="dl" aria-label="Download PDF" title="Download PDF" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 19h16"/></svg></button>
+    <button class="btn icon" id="share" aria-label="Share" title="Share"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M8 7l4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg></button>
     <a class="btn gold" href="../2027/#register">Request<span class="x">&nbsp;Allocation</span></a>
   </div>
  </div>
