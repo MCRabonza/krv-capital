@@ -168,7 +168,8 @@ html{ overflow-y:scroll; }
     <button class="btn icon" id="fs" aria-label="Full screen" title="Full screen (F)" disabled hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7"/></svg></button>
     <button class="btn" id="print" disabled>Print</button>
     <button class="btn" id="dl" disabled>Download<span class="x">&nbsp;PDF</span></button>
-    <a class="btn gold" href="../roadshow/#register">Request<span class="x">&nbsp;Allocation</span></a>
+    <button class="btn" id="share">Share</button>
+    <a class="btn gold" href="../2027/#register">Request<span class="x">&nbsp;Allocation</span></a>
   </div>
  </div>
 </div>
@@ -202,7 +203,7 @@ html{ overflow-y:scroll; }
 
   function fail(){
     msg.innerHTML='<div class="k">KRV &amp; Co. / Investors</div><h1>This link has expired.</h1>'+
-      '<p>Deck links last 24 hours. <a href="../roadshow/#deck">Open the deck again</a> with your email, or write to <a href="mailto:mcr@krv.co">mcr@krv.co</a>.</p>';
+      '<p>Deck links last 24 hours. <a href="../2027/#deck">Open the deck again</a> with your email, or write to <a href="mailto:mcr@krv.co">mcr@krv.co</a>.</p>';
     msg.hidden=false; sheet.hidden=true;
   }
   if(!okUrl||!window.pdfjsLib){ fail(); return; }
@@ -310,6 +311,15 @@ html{ overflow-y:scroll; }
     f.onload=function(){ try{ f.contentWindow.focus(); f.contentWindow.print(); }catch(x){ window.open(blobUrl,'_blank'); } };
     f.src=blobUrl; document.body.appendChild(f);
   };
+})();
+</script>
+<script>
+(function(){
+  var URL='https://capital.krv.co/2027/', b=document.getElementById('share');
+  function toast(t){var e=document.getElementById('ktoast');if(!e){e=document.createElement('div');e.id='ktoast';e.style.cssText='position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#D4A853;color:#0d1f17;font:600 11px articulat-cf,sans-serif;letter-spacing:.16em;text-transform:uppercase;padding:10px 16px;z-index:2000';document.body.appendChild(e);}e.textContent=t;e.style.display='block';clearTimeout(e._t);e._t=setTimeout(function(){e.style.display='none'},2200);}
+  b.addEventListener('click',function(){var d={title:'KRV & Co. · 2027 Capital Programme',text:'Want to profit from distress, or get paid to prevent it?',url:URL};
+    if(navigator.share){navigator.share(d).catch(function(){});return;}
+    (navigator.clipboard?navigator.clipboard.writeText(URL):Promise.reject()).then(function(){toast('Link copied');},function(){prompt('Copy this link',URL);});});
 })();
 </script>
 </body>
