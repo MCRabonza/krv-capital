@@ -274,17 +274,27 @@ html{ overflow-y:scroll; }
   function hide(){vm.classList.remove('open'); rm.classList.remove('open');}
   function saved(){try{return localStorage.getItem('krvInvEmail')||''}catch(e){return ''}}
   function save(v){try{localStorage.setItem('krvInvEmail',v)}catch(e){}}
+  // The reader pass (MCR, 26/11): given with the deck once; the next visit opens the deck without the form.
+  function pass(){try{return localStorage.getItem('krvReaderPass')||''}catch(e){return ''}}
+  function keepPass(v){try{ if(v) localStorage.setItem('krvReaderPass',v); else localStorage.removeItem('krvReaderPass'); }catch(e){}}
+  function askEmail(){ document.getElementById('gv_em').value=saved(); show(vm); setTimeout(function(){document.getElementById('gv_em').focus()},50); }
+  function viewDeck(){
+    var p=pass(); if(!p||!DECK){ askEmail(); return; }
+    fetch(DECK+'/pass',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({reader_pass:p})})
+      .then(function(r){ if(r.status===401||r.status===410){ keepPass(''); throw 0; } if(!r.ok) throw 0; return r.json(); })
+      .then(function(r){ if(!r.ok||!r.deck_url) throw 0; keepPass(r.reader_pass||p); location.href=viewer(r.deck_url); })
+      .catch(function(){ askEmail(); });
+  }
   function okEmail(v){return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)}
   function openReg(email,note){ if(email) document.getElementById('gr_em').value=email;
     if(note) document.getElementById('grTag').innerHTML=note; show(rm); setTimeout(function(){document.getElementById('gr_fn').focus()},50); }
-  document.querySelectorAll('[data-gate-view]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();
-    document.getElementById('gv_em').value=saved(); show(vm); setTimeout(function(){document.getElementById('gv_em').focus()},50);})});
+  document.querySelectorAll('[data-gate-view]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault(); viewDeck();})});
   document.querySelectorAll('[data-gate-register]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault(); openReg(saved());})});
   document.querySelectorAll('[data-gate-close]').forEach(function(b){b.addEventListener('click',hide)});
   [vm,rm].forEach(function(m){m.addEventListener('click',function(e){if(e.target===m)hide()})});
   document.addEventListener('keydown',function(e){if(e.key==='Escape')hide()});
   if(/[?&#]register/.test(location.href)) openReg(saved());
-  if(/[?&#]deck/.test(location.href)) { document.getElementById('gv_em').value=saved(); show(vm); }
+  if(/[?&#]deck/.test(location.href)) viewDeck();
 
   // The deck opens in the KRV viewer (/deck/); the signed link rides in the hash.
   function viewer(u){ return '/deck/#u='+encodeURIComponent(u); }
@@ -307,7 +317,7 @@ html{ overflow-y:scroll; }
     var link=(new URLSearchParams(location.search)).get('ref'); if(link) d.link_ref=link;
     fetch(DECK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)})
       .then(function(r){ if(r.status===429){ reset(); err.textContent='Too many attempts. Please try again later, or write to mcr@krv.co.'; err.style.display='block'; throw 0; } if(!r.ok) throw new Error(r.status); return r.json(); })
-      .then(function(r){ if(!r.ok||!r.deck_url) throw new Error('no deck'); location.href=viewer(r.deck_url); })
+      .then(function(r){ if(!r.ok||!r.deck_url) throw new Error('no deck'); keepPass(r.reader_pass||''); location.href=viewer(r.deck_url); })
       .catch(function(x){ if(x===0) return; reset(); openReg(em,'Complete your details below and the full Programme deck opens as soon as you submit.'); });
   });
 
