@@ -101,7 +101,8 @@ h2{font-family:var(--display);font-style:italic;font-weight:300;font-size:19px;l
 .cta .t{color:var(--muted)}
 .btn{display:inline-block;background:var(--gold);color:var(--base);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;padding:11px 18px;text-decoration:none}
 .ft{display:flex;justify-content:space-between;font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:4px 34px 8px}
-#grBtn{white-space:nowrap}</style><style>
+#grBtn{white-space:nowrap}.fsx{position:fixed;top:14px;right:14px;z-index:3000;width:40px;height:40px;display:none;align-items:center;justify-content:center;background:rgba(13,31,23,.72);border:1px solid rgba(247,243,231,.28);color:#F7F3E7;cursor:pointer;padding:0}.fsx svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}.fsx:hover{color:#D4A853;border-color:#D4A853}html.fsm .fsx{display:flex}html.fsm .topbar,html.fsm .gbar,html.fsm header{display:none!important}html.fsm body{padding:0!important;background:#0d1f17}html.fsm .page{box-shadow:none;margin:0 auto}
+</style><style>
 .topbar{
   --bg:#0d1f17; --cream:#F7F3E7; --accent:#4A8F7E; --accent-lt:#6FB39E;
   --border:rgba(247,243,231,0.1); --sans:'articulat-cf','Inter',sans-serif;
@@ -432,10 +433,18 @@ html{ overflow-y:scroll; }
   function share(){var d={title:'KRV & Co. · 2027 Capital Programme',text:'Want to profit from distress, or get paid to prevent it?',url:URL};
     if(navigator.share){navigator.share(d).catch(function(){});return;}
     (navigator.clipboard?navigator.clipboard.writeText(URL):Promise.reject()).then(function(){toast('Link copied');},function(){prompt('Copy this link',URL);});}
-  var fs=document.getElementById('tFs'), el=document.documentElement;
+  var fs=document.getElementById('tFs'), el=document.documentElement, pg=document.querySelector('.page'), z0='';
   if(!(el.requestFullscreen||el.webkitRequestFullscreen)) fs.hidden=true;
-  fs.addEventListener('click',function(){var f=document.fullscreenElement||document.webkitFullscreenElement;
-    if(f){(document.exitFullscreen||document.webkitExitFullscreen).call(document);}else{(el.requestFullscreen||el.webkitRequestFullscreen).call(el);}});
+  var fx=document.createElement('button'); fx.type='button'; fx.className='fsx'; fx.setAttribute('aria-label','Exit full screen'); fx.title='Exit full screen (Esc)'; fx.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>'; document.body.appendChild(fx);
+  function fsEl(){return document.fullscreenElement||document.webkitFullscreenElement}
+  function fit(){ if(!pg) return; pg.style.zoom=Math.min((innerHeight-24)/1123,(innerWidth-24)/794); pg.style.marginTop=Math.max(0,(innerHeight/parseFloat(pg.style.zoom)-1123)/2)+'px'; }
+  function onFs(){ var on=!!fsEl(); document.documentElement.classList.toggle('fsm',on);
+    if(on){ z0=pg?pg.style.zoom:''; fit(); window.addEventListener('resize',fit); } else { window.removeEventListener('resize',fit); if(pg){pg.style.zoom=z0; pg.style.marginTop='';} } }
+  document.addEventListener('fullscreenchange',onFs); document.addEventListener('webkitfullscreenchange',onFs);
+  fx.addEventListener('click',function(){(document.exitFullscreen||document.webkitExitFullscreen).call(document);});
+  fs.addEventListener('click',function(){
+    if(fsEl()){(document.exitFullscreen||document.webkitExitFullscreen).call(document);}else{(el.requestFullscreen||el.webkitRequestFullscreen).call(el);}});
+  window.__fsMock=function(){document.documentElement.classList.add('fsm');fit();};
   document.getElementById('tPrint').addEventListener('click',function(){window.print();});
   document.getElementById('tShare').addEventListener('click',share);
 })();

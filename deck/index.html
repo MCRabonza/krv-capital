@@ -75,6 +75,7 @@ body{padding-top:72px}
 .btn.arrow{border:0;width:26px;height:30px;padding:0;color:var(--cream)}.btn.arrow svg,.btn.icon svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}.btn.arrow:hover:not(:disabled),.btn.icon:hover:not(:disabled){color:var(--gold);border-color:transparent}.btn.icon{border:0;width:30px;padding:0;justify-content:center}.pager{gap:10px}.count{min-width:0;font-size:11px;letter-spacing:.18em;font-variant-numeric:tabular-nums}.count input{width:22px;border-bottom:0;padding:0}.count input:focus{outline:none;border-bottom:1px solid var(--gold)}.hint{display:none!important}
 .btn.gold{background:var(--gold);border-color:var(--gold);color:var(--base);font-weight:600}.btn.gold:hover{background:#e2bb6a;border-color:#e2bb6a;color:var(--base)}
 .acts .btn.gold{width:180px;height:32px;padding:0;justify-content:center;box-sizing:border-box;font-weight:500;font-size:10px;letter-spacing:.16em;gap:0}
+.stage .fsx{position:absolute;top:14px;right:14px;z-index:3000;width:40px;height:40px;display:none;align-items:center;justify-content:center;background:rgba(13,31,23,.72);border:1px solid rgba(247,243,231,.28);color:#F7F3E7;cursor:pointer;padding:0}.stage .fsx svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}.stage .fsx:hover{color:#D4A853;border-color:#D4A853}.stage:fullscreen .fsx,.stage:-webkit-full-screen .fsx,.stage.fsm .fsx{display:flex}
 </style>
 </head>
 <body>
@@ -176,6 +177,7 @@ html{ overflow-y:scroll; }
 </div>
 
 <main class="stage" id="stage">
+  <button class="fsx" type="button" id="fsx" aria-label="Exit full screen" title="Exit full screen (Esc)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   <div class="sheet" id="sheet" hidden>
     <div class="hit l" id="hl" title="Previous page"></div>
     <div class="hit r" id="hr" title="Next page"></div>
@@ -300,6 +302,7 @@ html{ overflow-y:scroll; }
     else{(stg.requestFullscreen||stg.webkitRequestFullscreen).call(stg);}
   }
   fsb.addEventListener('click',toggleFs);
+  document.getElementById('fsx').addEventListener('click',function(e){e.stopPropagation();if(fsEl())(document.exitFullscreen||document.webkitExitFullscreen).call(document);});
   function fsChange(){fsb.innerHTML=fsEl()?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4l-6 6M14 4v6h6M4 20l6-6M10 20v-6H4"/></svg>':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7"/></svg>';fsb.title=fsEl()?'Exit full screen (Esc)':'Full screen (F)';fsb.setAttribute('aria-label',fsEl()?'Exit full screen':'Full screen');setTimeout(render,60);}
   document.addEventListener('fullscreenchange',fsChange);document.addEventListener('webkitfullscreenchange',fsChange);
   var rt; window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(render,120)});
