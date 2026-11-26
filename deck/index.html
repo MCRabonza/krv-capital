@@ -191,6 +191,7 @@ html{ overflow-y:scroll; }
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="../assets/krv-track.js"></script>
 <script>
 (function(){
   // The signed link comes in the hash (#u=...), so it never reaches a server log.
@@ -210,6 +211,11 @@ html{ overflow-y:scroll; }
     msg.hidden=false; sheet.hidden=true;
   }
   if(!okUrl||!window.pdfjsLib){ fail(); return; }
+  // Tracking (MCR, 27/11): the deck link names the reader to Terminal; page time counts only while the tab is in front.
+  try{ window.krvDeckToken=(new URL(u, location.href)).searchParams.get('t')||''; }catch(x){}
+  var K=window.krv||{track:function(){},flush:function(){},visibleSeconds:function(){return 0}}, cur=0;
+  function pageTime(){ var s=K.visibleSeconds(); if(cur&&s>0) K.track('page_view',{page:cur,seconds:Math.min(s,3600)}); }
+  window.krvOnHide=pageTime; addEventListener('pagehide',function(){ pageTime(); K.flush(); });
   pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
   fetch(u,{credentials:'omit'})
@@ -221,6 +227,7 @@ html{ overflow-y:scroll; }
     .then(function(d){
       doc=d; tot.textContent=String(d.numPages).padStart(2,'0'); msg.hidden=true; sheet.hidden=false; document.getElementById('hint').hidden=false;
       pbtn.disabled=dbtn.disabled=false; fsb.disabled=false;
+      K.track('deck_open'); K.flush();
       var h=parseInt((location.hash.match(/[&#]p=(\d+)/)||[])[1],10); go(h||1);
     })
     .catch(function(e){
@@ -263,7 +270,7 @@ html{ overflow-y:scroll; }
   }
   function go(k){
     if(!doc) return;
-    n=Math.max(1,Math.min(doc.numPages,k)); pgIn.value=String(n).padStart(2,'0');
+    n=Math.max(1,Math.min(doc.numPages,k)); if(n!==cur){ pageTime(); cur=n; } pgIn.value=String(n).padStart(2,'0');
     prev.disabled=n<=1; next.disabled=n>=doc.numPages;
     history.replaceState(null,'','#u='+encodeURIComponent(u)+'&p='+n);
     render();
@@ -301,15 +308,15 @@ html{ overflow-y:scroll; }
     if(fsEl()){(document.exitFullscreen||document.webkitExitFullscreen).call(document);}
     else{(stg.requestFullscreen||stg.webkitRequestFullscreen).call(stg);}
   }
-  fsb.addEventListener('click',toggleFs);
+  fsb.addEventListener('click',function(){ K.track('fullscreen'); toggleFs(); });
   document.getElementById('fsx').addEventListener('click',function(e){e.stopPropagation();if(fsEl())(document.exitFullscreen||document.webkitExitFullscreen).call(document);});
   function fsChange(){fsb.innerHTML=fsEl()?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4l-6 6M14 4v6h6M4 20l6-6M10 20v-6H4"/></svg>':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7"/></svg>';fsb.title=fsEl()?'Exit full screen (Esc)':'Full screen (F)';fsb.setAttribute('aria-label',fsEl()?'Exit full screen':'Full screen');setTimeout(render,60);}
   document.addEventListener('fullscreenchange',fsChange);document.addEventListener('webkitfullscreenchange',fsChange);
   var rt; window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(render,120)});
 
-  dbtn.onclick=function(){ if(!blobUrl) return; var a=document.createElement('a'); a.href=blobUrl; a.download=NAME; document.body.appendChild(a); a.click(); a.remove(); };
+  dbtn.onclick=function(){ if(!blobUrl) return; K.track('download'); K.flush(); var a=document.createElement('a'); a.href=blobUrl; a.download=NAME; document.body.appendChild(a); a.click(); a.remove(); };
   pbtn.onclick=function(){
-    if(!blobUrl) return;
+    if(!blobUrl) return; K.track('print'); K.flush();
     var f=document.getElementById('pf'); if(f) f.remove();
     f=document.createElement('iframe'); f.id='pf'; f.style.cssText='position:fixed;width:0;height:0;border:0;right:0;bottom:0';
     f.onload=function(){ try{ f.contentWindow.focus(); f.contentWindow.print(); }catch(x){ window.open(blobUrl,'_blank'); } };
@@ -318,13 +325,7 @@ html{ overflow-y:scroll; }
 })();
 </script>
 <script>
-(function(){
-  var URL='https://capital.krv.co/2027/', b=document.getElementById('share');
-  function toast(t){var e=document.getElementById('ktoast');if(!e){e=document.createElement('div');e.id='ktoast';e.style.cssText='position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#D4A853;color:#0d1f17;font:600 11px articulat-cf,sans-serif;letter-spacing:.16em;text-transform:uppercase;padding:10px 16px;z-index:2000';document.body.appendChild(e);}e.textContent=t;e.style.display='block';clearTimeout(e._t);e._t=setTimeout(function(){e.style.display='none'},2200);}
-  b.addEventListener('click',function(){var d={title:'KRV & Co. · 2027 Capital Programme',text:'Want to profit from distress, or get paid to prevent it?',url:URL};
-    if(navigator.share){navigator.share(d).catch(function(){});return;}
-    (navigator.clipboard?navigator.clipboard.writeText(URL):Promise.reject()).then(function(){toast('Link copied');},function(){prompt('Copy this link',URL);});});
-})();
+document.getElementById('share').addEventListener('click',function(e){ e.stopPropagation(); if(window.krv) krv.openShare(this); });
 </script>
 </body>
 </html>

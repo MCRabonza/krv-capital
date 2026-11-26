@@ -267,6 +267,7 @@ html{ overflow-y:scroll; }
   <div class="err" id="grErr"></div></form>
 </div></div>
 
+<script src="../assets/krv-track.js"></script>
 <script>
 (function(){
   var GATE='https://kraion-terminal.vercel.app/api/intake/investor', DECK=GATE?GATE.replace('/api/intake/investor','/api/intake/deck'):'';
@@ -456,7 +457,19 @@ html{ overflow-y:scroll; }
     if(fsEl()){(document.exitFullscreen||document.webkitExitFullscreen).call(document);}else{(el.requestFullscreen||el.webkitRequestFullscreen).call(el);}});
   window.__fsMock=function(){document.documentElement.classList.add('fsm');fit();};
   document.getElementById('tPrint').addEventListener('click',function(){window.print();});
-  document.getElementById('tShare').addEventListener('click',share);
+  document.getElementById('tShare').addEventListener('click',function(e){e.stopPropagation();krv.openShare(this);});
+})();
+</script>
+<script>
+/* Teaser tracking (MCR, 27/11): view, visible time, and every control. The reader is named only by Terminal (reader pass). */
+(function(){
+  if(!window.krv) return;
+  krv.track('teaser_view');
+  function time(){ var s=krv.visibleSeconds(); if(s>0) krv.track('teaser_time',{seconds:Math.min(s,3600)}); }
+  window.krvOnHide=time; addEventListener('pagehide',function(){ time(); krv.flush(); });
+  function on(id,kind,o){ var el=document.getElementById(id); if(el) el.addEventListener('click',function(){ krv.track(kind,o); krv.flush(); }); }
+  on('tFs','fullscreen',{channel:'teaser'}); on('tPrint','print',{channel:'teaser'}); on('tDl','download',{channel:'teaser'});
+  document.querySelectorAll('[data-gate-register]').forEach(function(b){ b.addEventListener('click',function(){ krv.track('request_allocation'); krv.flush(); }); });
 })();
 </script>
 </body></html>
