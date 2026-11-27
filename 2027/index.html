@@ -235,7 +235,7 @@ html{ overflow-y:scroll; }
   <p class="tg">Enter your email and the full Programme deck opens.</p>
   <form id="gvForm" novalidate>
     <label for="gv_em">Email</label><input id="gv_em" type="email" autocomplete="email" placeholder="your@mail.com" required>
-    <label class="chk" style="margin-top:14px"><input type="checkbox" id="gv_pd"> I consent to KRV &amp; Co. keeping my email to share information on the 2027 Capital Programme, under Thailand&rsquo;s Personal Data Protection Act. *</label>
+    <label class="chk" style="margin-top:14px"><input type="checkbox" id="gv_pd"> I consent to KRV &amp; Co. keeping my email to share information on the 2027 Capital Programme, and to record how I read and share the deck, under Thailand&rsquo;s Personal Data Protection Act. *</label>
     <div class="act"><div class="meta">To invest, <a href="#register" data-gate-register style="color:#D4A853">request an allocation</a>.</div>
     <button class="gbtn s" type="submit" id="gvBtn">Open the Deck &rarr;</button></div>
     <div class="err" id="gvErr"></div>
@@ -260,7 +260,7 @@ html{ overflow-y:scroll; }
     <div><label for="gr_hd">LINE or WhatsApp ID</label><input id="gr_hd" name="contact_handle"></div>
     <div class="full"><label for="gr_ib">Introduced by</label><input id="gr_ib" name="introduced_by" placeholder="Name, if any"></div>
     <div class="full"><label for="gr_nt">Questions or comments</label><textarea id="gr_nt" name="note"></textarea></div>
-    <div class="full"><label class="chk"><input type="checkbox" id="gr_pd" name="pdpa_consent"> I consent to KRV &amp; Co. keeping my details to share information on the 2027 Capital Programme, under Thailand&rsquo;s Personal Data Protection Act. *</label></div>
+    <div class="full"><label class="chk"><input type="checkbox" id="gr_pd" name="pdpa_consent"> I consent to KRV &amp; Co. keeping my details to share information on the 2027 Capital Programme, and to record how I read and share the deck, under Thailand&rsquo;s Personal Data Protection Act. *</label></div>
   </div>
   <div class="act"><div class="meta">A request is not a commitment, and this is not an offer of securities.</div>
   <button class="gbtn p" type="submit" id="grBtn">Request Allocation &rarr;</button></div>
@@ -315,7 +315,7 @@ html{ overflow-y:scroll; }
     if(!DECK){ openReg(em); return; }
     var btn=document.getElementById('gvBtn'); btn.disabled=true; btn.innerHTML='Opening&hellip;';
     var reset=function(){ btn.disabled=false; btn.innerHTML='Open the Deck &rarr;'; };
-    var d={email:em, pdpa_consent:true, pdpa_text_version:'capital-krv-co-2026-11-16-v1', consent_at:new Date().toISOString(), referrer_page:location.href};
+    var d={email:em, pdpa_consent:true, pdpa_text_version:'capital-krv-co-2026-11-27-v2', consent_at:new Date().toISOString(), referrer_page:location.href};
     var link=(new URLSearchParams(location.search)).get('ref'); if(link) d.link_ref=link;
     fetch(DECK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)})
       .then(function(r){ if(r.status===429){ reset(); err.textContent='Too many attempts. Please try again later, or write to mcr@krv.co.'; err.style.display='block'; throw 0; } if(!r.ok) throw new Error(r.status); return r.json(); })
@@ -334,7 +334,7 @@ html{ overflow-y:scroll; }
     var v=function(id){return document.getElementById(id).value.trim()};
     var d={form_type:'programme_interest', firstname:v('gr_fn'), lastname:v('gr_ln'), email:v('gr_em').toLowerCase(), phone:v('gr_ph'),
       country:v('gr_co'), investor_type:v('gr_it'), doors:doors, tickets:parseInt(v('gr_tk')||'1',10),
-      pdpa_consent:true, pdpa_text_version:'capital-krv-co-2026-11-16-v1', consent_at:new Date().toISOString(),
+      pdpa_consent:true, pdpa_text_version:'capital-krv-co-2026-11-27-v2', consent_at:new Date().toISOString(),
       referrer_page:location.href, site_referrer:document.referrer||''};
     ['contact_channel:gr_ch','contact_handle:gr_hd','introduced_by:gr_ib','note:gr_nt'].forEach(function(p){var k=p.split(':'); var x=v(k[1]); if(x) d[k[0]]=x;});
     var link=(new URLSearchParams(location.search)).get('ref'); if(link) d.link_ref=link;
